@@ -27,7 +27,7 @@ jobs:
         with:
           registry: ${{ env.CONTAINER_REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the Docker image
         run: docker build -t $SERVICE_NAME:latest .
       - name: GitHub Image Push
