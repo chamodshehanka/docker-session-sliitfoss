@@ -1,5 +1,6 @@
 name: Bashway 2023 Image Build and Push
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*'
