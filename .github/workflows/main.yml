@@ -1,0 +1,34 @@
+name: Bashway 2023 Image Build and Push
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - "main"
+
+jobs:
+  build-push:
+    runs-on:
+      - ubuntu-latest
+    env:
+      SERVICE_NAME: ghcr.io/chamodshehanka/bashway-2023
+      CONTAINER_REGISTRY: ghcr.io
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Build the Docker image
+        run: docker build -t $SERVICE_NAME:latest .
+      - name: GitHub Image Push
+        run: docker push $SERVICE_NAME:latest
